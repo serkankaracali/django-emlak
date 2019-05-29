@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+
+{% block title %} | Arama Sonuçları {% endblock %}
+
+{% block content %}
+<section id="showcase-inner" class="showcase-search text-white py-5">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-12">
+          <form action="{% url 'arama' %}">
+            <!-- Form Row 1 -->
+            <div class="form-row">
+              <div class="col-md-6 mb-3">
+                <label class="sr-only">Anahtar Kelime</label>
+                <input type="text" name="anahtarkelime" class="form-control" placeholder="Anahtar Kelimeler" value="{{ degerler.anahtarkelime }}">
+              </div>
+
+              <!-- <div class="col-md-4 mb-3">
+                <label class="sr-only">Şehir</label>
+                <input type="text" name="sehir" class="form-control" placeholder="Şehir" value="{{ degerler.city }}">
+              </div> -->
+
+              <div class="col-md-6 mb-3">
+                <label class="sr-only">Bölge</label>
+                <select name="bolge" class="form-control">
+                  <option selected="true" disabled="disabled">Bölge (Hepsi)</option>
+                  {% for key,value in bolge_choices.items %}
+                      <option value="{{ key }}" 
+                      {% if key == degerler.bolge %}
+                        selected
+                      {% endif %}
+                      >{{ value }}</option>
+                    {% endfor %}
+                </select>
+              </div>
+            </div>
+            <!-- Form Row 2 -->
+            <div class="form-row">
+              <div class="col-md-4 mb-3">
+                <label class="sr-only">Oda Sayısı</label>
+                <select name="oda" class="form-control">
+                  <option selected="true" disabled="disabled">Oda Sayısı (Hepsi)</option>
+                  {% for key,value in oda_choices.items %}
+                      <option value="{{ key }}"
+                      {% if key == degerler.oda %}
+                        selected
+                      {% endif %}
+                      >{{ value }}</option>
+                    {% endfor %}
+                </select>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="sr-only">Kategori</label>
+                <select name="kategori" class="form-control">
+                  <option selected="true" disabled="disabled">Kategori (Hepsi)</option>
+                  {% for key,value in kategori_choices.items %}
+                      <option value="{{ key }}"
+                      {% if key == degerler.kategori %}
+                        selected
+                      {% endif %}
+                      >{{ value }}</option>
+                    {% endfor %}
+                </select>
+              </div>
+              <div class="col-md-4 mb-3">
+                <select name="fiyat" class="form-control">
+                  <option selected="true" disabled="disabled">Max Fiyat (Hepsi)</option>
+                  {% for key,value in fiyat_choices.items %}
+                      <option value="{{ key }}"
+                      {% if key == degerler.fiyat %}
+                        selected
+                      {% endif %}
+                      >{{ value }}</option>
+                    {% endfor %}
+                </select>
+              </div>
+            </div>
+            <button class="btn btn-secondary btn-block mt-4" type="submit">Ara</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Breadcrumb -->
+  <section id="bc" class="mt-3">
+    <div class="container">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="{% url 'index' %}">
+              <i class="fas fa-home"></i> Ana Sayfa</a>
+          </li>
+          <li class="breadcrumb-item">
+            <a href="{% url 'ilanlar' %}">İlanlara Göz at</a>
+          </li>
+          <li class="breadcrumb-item active"> Arama Sonuçları</li>
+        </ol>
+      </nav>
+    </div>
+  </section>
+
+  <!-- Listings -->
+  <section id="ilanlar" class="py-4">
+    <div class="container">
+      <div class="row">
+        {% if ilanlar %}
+          {% for ilan in ilanlar %}
+          <div class="col-md-6 col-lg-4 mb-4">
+              <div class="card listing-preview">
+                <img class="card-img-top" src="{{ ilan.foto_ana.url }}" alt="">
+                <div class="card-img-overlay">
+                  <h2>
+                    <span class="badge badge-secondary text-white">{{ ilan.fiyat | intcomma }} TL</span>
+                  </h2>
+                </div>
+                <div class="card-body">
+                  <div class="listing-heading text-center">
+                    <h4 class="text-primary">{{ ilan.title }}</h4>
+                    <p>
+                      <i class="fas fa-map-marker text-secondary"></i> {{ ilan.sehir }} {{ ilan.bolge }}, {{ listing.zipcode }}</p>
+                  </div>
+                  <hr>
+                  <div class="row py-2 text-secondary">
+                    <div class="col-6">
+                      <i class="fas fa-th-large"></i> Metrekare: {{ ilan.metrekare }}</div>
+                    <div class="col-6">
+                      <i class="fas fa-square"></i> Oda: {{ ilan.oda }}</div>
+                  </div>
+                  <div class="row py-2 text-secondary">
+                    <div class="col-6">
+                      <i class="fas fa-square"></i> Kategori: {{ ilan.kategori }}</div>
+                    <div class="col-6">
+                      <i class="fas fa-money-bill-alt"></i> Fiyat: {{ ilan.fiyat | intcomma }}TL</div>
+                  </div>
+                  <hr>
+                  <div class="row py-2 text-secondary">
+                    <div class="col-12">
+                      <i class="fas fa-user"></i> {{ ilan.emlakci }}</div>
+                  </div>
+                  <div class="row text-secondary pb-2">
+                    <div class="col-6">
+                      <i class="fas fa-clock"></i> {{ ilan.liste_tarihi | timesince }}</div>
+                  </div>
+                  <hr>
+                  <a href="{% url 'ilan' ilan.id %}" class="btn btn-primary btn-block">Daha Fazla Bilgi</a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="col-md-12">
+            <p>İlan Yok</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+  {% endblock %}

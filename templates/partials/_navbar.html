@@ -1,0 +1,90 @@
+{% load static %}
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'index' %}">
+        <img src="{% static 'img/logo1.png' %}" height="100" width="150" class="logo" alt="">
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <ul class="navbar-nav">
+          <li
+            {% if '/' == request.path %}
+              class="nav-item active mr-3"
+            {% else %}
+              class="nav-item mr-3"
+            {% endif %}
+          >
+            <a class="nav-link" href="{% url 'index' %}">Ana Sayfa</a>
+          </li>
+          <li
+            {% if 'hakkinda' in request.path %}
+              class="nav-item active mr-3"
+            {% else %}
+              class="nav-item mr-3"
+            {% endif %}
+          >
+            <a class="nav-link" href="{% url 'hakkinda' %}">Hakkımızda</a>
+          </li>
+          <li
+            {% if 'ilanlar' in request.path %}
+              class="nav-item active mr-3"
+            {% else %}
+              class="nav-item mr-3"
+            {% endif %}
+          >
+            <a class="nav-link" href="{% url 'ilanlar' %}">İlanlar</a>
+          </li>
+        </ul>
+
+        <ul class="navbar-nav ml-auto">
+          {% if user.is_authenticated %}
+            <li
+            {% if 'panel' in request.path %}
+              class="nav-item active mr-3"
+            {% else %}
+              class="nav-item mr-3"
+            {% endif %}
+            >
+              <a class="nav-link" href="{% url 'panel' %}">
+               Hoşgeldiniz {{ user.kullaniciadi }} (Panel)</a>
+            </li>
+            <li class="nav-item mr-3">
+              <a href="javascript:{document.getElementById('cikis').submit()}" class="nav-link">
+                <i class="fas fa-sign-out-alt"></i> Çıkış
+              </a>
+              <form action="{% url 'cikis' %}" method="POST" id="cikis">
+                {% csrf_token %}
+                <input type="hidden">
+              </form>
+            </li>
+          {% else %}
+            <li
+            {% if 'kayit' in request.path %}
+              class="nav-item active mr-3"
+            {% else %}
+              class="nav-item mr-3"
+            {% endif %}
+            >
+              <a class="nav-link" href="{% url 'kayit' %}">
+                <i class="fas fa-user-plus"></i> Kayıt Ol</a>
+            </li>
+            <li
+            {% if 'giris' in request.path %}
+              class="nav-item active mr-3"
+            {% else %}
+              class="nav-item mr-3"
+            {% endif %}
+            >
+              <a class="nav-link" href="{% url 'giris' %}">
+                <i class="fas fa-sign-in-alt"></i>
+
+                Giriş</a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>

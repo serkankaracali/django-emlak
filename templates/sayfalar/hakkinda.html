@@ -1,0 +1,97 @@
+{% extends 'base.html' %} 
+
+{% load static %}
+
+{% block title %} | Hakkımızda {% endblock %}
+
+{% block content %}
+<section id="showcase-inner" class="py-5 text-white">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-12">
+          <h1 class="display-4">Çalı Emlak Hakkında</h1>
+          <p class="lead">---------</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Breadcrumb -->
+  <section id="bc" class="mt-3">
+    <div class="container">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="{% url 'index' %}">
+              <i class="fas fa-home"></i> Ana Sayfa</a>
+          </li>
+          <li class="breadcrumb-item active"> Hakkımızda</li>
+        </ol>
+      </nav>
+    </div>
+  </section>
+
+  <section id="hakkinda" class="py-4">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8">
+          <h2>Mükemmel Evi Arıyoruz</h2>
+          <p class="lead">----------------</p>
+          <img src="{% static 'img/about.jpg' %}" alt="">
+          <p class="mt-4">---------------------------------------------------------------------------</p>
+        </div>
+        <div class="col-md-4">
+          {% if mvp_emlakcilar %}
+            {% for emlakci in mvp_emlakcilar %}
+            <div class="card">
+                <img class="card-img-top" src="{{ emlakci.foto.url }}" alt="Ayın Emlakçısı">
+                <div class="card-body">
+                  <h5 class="card-title">Ayın Emlakçısı</h5>
+                  <h6 class="text-secondary">{{ emlakci.isim }}</h6>
+                  <p class="card-text">{{ emlakci.aciklama }}
+                  </p>
+                </div>
+              </div>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Work -->
+  <section id="work" class="bg-dark text-white text-center">
+    <h2 class="display-4">Sizin İçin Çalışıyoruz</h2>
+    <h4>-------------------------------------------------------------</h4>
+    <hr>
+    <a href="{% url 'ilanlar' %}" class="btn btn-secondary text-white btn-lg">Öne Çıkan İlanlarımız</a>
+  </section>
+
+  <!-- Team -->
+  <section id="team" class="py-5">
+    <div class="container">
+      <h2 class="text-center">Ekibimiz</h2>
+      <div class="row text-center">
+        {% if emlakcilar %}
+          {% for emlakci in emlakcilar %}
+          <div class="col-md-4">
+              <img src="{{ emlakci.foto.url }}" alt="" class="rounded-circle mb-3">
+              <h4>{{ emlakci.isim }}</h4>
+              <p class="text-success">
+                <i class="fas fa-award text-success mb-3"></i> Emlakçı</p>
+              <hr>
+              <p>
+                <i class="fas fa-phone"></i> {{ emlakci.telefon }}</p>
+              <p>
+                <i class="fas fa-envelope-open"></i> {{ emlakci.telefon }}</p>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="col-md-12">
+            <p>Emlakçı Yok</p>
+          </div>
+        {% endif %}       
+      </div>
+    </div>
+  </section>
+{% endblock %}

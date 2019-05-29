@@ -1,0 +1,173 @@
+{% extends 'base.html' %} 
+
+{% load humanize %}
+
+{% block title %} | Hoşgeldiniz {% endblock %}
+
+{% block content %}
+<!-- Showcase -->
+<section id="showcase">
+    <div class="container text-center">
+      <div class="home-search p-5">
+        <div class="overlay p-5">
+          <h1 class="display-4 mb-4">
+            Emlak Arama Artık Çok Kolay
+          </h1>
+          <p class="lead">-------------------------------------------------------------------------
+            -------------------------------------
+          </p>
+          <div class="arama">
+            <form action="{% url 'arama' %}">
+              <!-- Form Row 1 -->
+              <div class="form-row">
+                <div class="col-md-6 mb-3">
+                  <label class="sr-only">Anahtar Kelimeler </label>
+                  <input type="text" name="anahtarkelime" class="form-control" placeholder="Anahtar Kelimeler">
+                </div>
+
+                <!-- <div class="col-md-4 mb-3">
+                  <label class="sr-only">Şehir</label>
+                  <input type="text" name="sehir" class="form-control" placeholder="Şehir">
+                </div> -->
+
+                <div class="col-md-6 mb-3">
+                  <label class="sr-only">Bölge</label>
+                  <select name="bolge" class="form-control">
+                    <option selected="true" disabled="disabled">Bölge (Hepsi)</option>
+                    {% for key,value in bolge_choices.items %}
+                      <option value="{{ key }}">{{ value }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <!-- Form Row 2 -->
+              <div class="form-row">
+                <div class="col-md-4 mb-3">
+                  <!-- <label class="sr-only">Kategori</label> -->
+                  <select name="oda" class="form-control" id="type">
+                    <option selected="true" disabled="disabled">Oda Sayısı (Hepsi)</option>
+                    {% for key,value in oda_choices.items %}
+                      <option value="{{ key }}">{{ value }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <!-- <label class="sr-only">Kategori</label> -->
+                  <select name="kategori" class="form-control" id="type">
+                    <option selected="true" disabled="disabled">Kategori (Hepsi)</option>
+                    {% for key,value in kategori_choices.items %}
+                      <option value="{{ key }}">{{ value }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <select name="fiyat" class="form-control" id="type">
+                    <option selected="true" disabled="disabled">Max Fiyat (Hepsi)</option>
+                    {% for key,value in fiyat_choices.items %}
+                      <option value="{{ key }}">{{ value }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <button class="btn btn-secondary btn-block mt-4" type="submit">Ara</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+<br>
+  <!-- Alerts -->
+  {% include 'partials/_alerts.html' %}
+
+  <!-- ilanlar -->
+  <section id="ilanlar" class="py-5">
+    <div class="container">
+      <h3 class="text-center mb-3">Son İlanlar</h3>
+      <div class="row">
+        {% if ilanlar %}
+          {% for ilan in ilanlar %}
+            <!-- Listing 1 -->
+            <div class="col-md-6 col-lg-4 mb-4">
+              <div class="card listing-preview">
+                <img class="card-img-top" src="{{ ilan.foto_ana.url }}" alt="">
+                <div class="card-img-overlay">
+                  <h2>
+                    <span class="badge badge-secondary text-white">{{ ilan.fiyat | intcomma }} TL</span>
+                  </h2>
+                </div>
+                <div class="card-body">
+                  <div class="listing-heading text-center">
+                    <h4 class="text-primary">{{ ilan.baslik }}</h4>
+                    <p>
+                      <i class="fas fa-map-marker text-secondary"></i> {{ ilan.sehir }} {{ ilan.bolge }}, {{ ilan.zipcode }}</p>
+                  </div>
+                  <hr>
+                  <div class="row py-2 text-secondary">
+                    <div class="col-6">
+                      <i class="fas fa-th-large"></i> Metrekare: {{ ilan.metrekare }}</div>
+                    <div class="col-6">
+                      <i class="fas fa-square"></i> Oda: {{ ilan.oda }}</div>
+                  </div>
+                  <div class="row py-2 text-secondary">
+                    <div class="col-6">
+                      <i class="fas fa-square"></i> Kategori: {{ ilan.kategori }}</div>
+                    <div class="col-6">
+                      <i class="fas fa-money-bill-alt"></i> Fiyat: {{ ilan.fiyat | intcomma }}TL</div>
+                  </div>
+                  <hr>
+                  <div class="row py-2 text-secondary">
+                    <div class="col-6">
+                      <i class="fas fa-user"></i> {{ ilan.emlakci }}</div>
+                  </div>
+                  <div class="row text-secondary pb-2">
+                    <div class="col-6">
+                      <i class="fas fa-clock"></i> {{ ilan.liste_tarihi | timesince }}</div>
+                  </div>
+                  <hr>
+                  <a href="{% url 'ilan' ilan.id %}" class="btn btn-primary btn-block">Daha Fazla Bilgi</a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="col-md-12">
+            <p>İlan Yok</p>
+          </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </section>
+
+  <section id="services" class="py-5 bg-secondary text-white">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-4">
+          <i class="fas fa-comment fa-4x mr-4"></i>
+          <hr>
+          <h3>Danışmanlık Servisleri</h3>
+          <p>-------------------------------------------------------------------------
+            ---------------------------------------------
+          </p>
+        </div>
+        <div class="col-md-4">
+          <i class="fas fa-home fa-4x mr-4"></i>
+          <hr>
+          <h3>Emlak Yönetimi</h3>
+          <p>-------------------------------------------------------------------------
+            ---------------------------------------------
+          </p>
+        </div>
+        <div class="col-md-4">
+          <i class="fas fa-suitcase fa-4x mr-4"></i>
+          <hr>
+          <h3>Kiralama ve Satış</h3>
+          <p>-------------------------------------------------------------------------
+            --------------------------------------------------
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
